@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 
 // Express
 const app = express();
+const publicPath = (process.env.NODE_ENV === 'development') ? '../../public/' : './';
 const PORT = process.env.PORT || 9000;
 
 app.use(compression());
@@ -15,27 +16,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 
-if (process.env.NODE_ENV === 'development') {
-    app.use(express.static(path.join(__dirname, '../../public')));
-
-    app.get('/', (req, res) => {
-        res.sendFile(path.join(__dirname, '../../public', 'index.html'));
-    });
-} else {
-    app.use(express.static(path.join(__dirname)));
-
-    app.get('/', (req, res) => {
-        res.sendFile(path.join(__dirname, 'index.html'));
-    });
-}
-
-app.get('*', (req, res) => {
-    res.status(404).send('Not found');
-});
-
-app.listen(PORT, () => {
-    console.log(`Express server running at http://0.0.0.0:${PORT}/`);
-});
+app.use('/', express.static(path.join(__dirname, publicPath)));
+app.get('*', (req, res) => res.status(404).send('Not found'));
+app.listen(PORT);
 
 // Electron
 let mainWindow = null;

@@ -5,7 +5,7 @@ import webpack from 'webpack';
 import pjson from './package.json';
 
 module.exports = {
-    target: 'electron',
+    target: 'electron-main',
     entry: {
         index: [
             './src/client/js/index.js',
@@ -46,7 +46,6 @@ module.exports = {
             'process.env.VERSION': JSON.stringify(pjson.version),
         }),
         new ExtractTextPlugin({ filename: '[name].css', allChunks: false }),
-        new webpack.optimize.UglifyJsPlugin({ comments: false }),
         new LiveReloadPlugin({ appendScriptTag: true }),
     ],
 };
